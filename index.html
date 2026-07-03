@@ -12,7 +12,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <!-- Configure Tailwind with custom luxury emerald-brown palette inspired by the grunge wallpaper -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -77,10 +76,7 @@
             padding-bottom: env(safe-area-inset-bottom, 0px);
         }
         .content-area {
-            padding-bottom: calc(6.75rem + env(safe-area-inset-bottom, 0px));
-        }
-        .bottom-nav {
-            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
         }
         .nav-item {
             -webkit-tap-highlight-color: transparent;
@@ -96,17 +92,20 @@
         .page-enter {
             animation: slideUp 0.25s ease-out;
         }
+        /* Desktop blocker has been removed */
     </style>
 </head>
 <body class="bg-coffee-50 text-[#1c0c02] dark:bg-emerald-955 dark:text-[#e1f0ec] min-h-screen transition-colors duration-300">
-
 
     <div id="app" class="min-h-screen flex flex-col relative max-w-lg mx-auto shadow-2xl" v-cloak>
             
             <!-- MOBILE HEADER -->
             <header class="bg-white/95 backdrop-blur-md dark:bg-[#111c19]/95 border-b border-coffee-200 dark:border-emerald-900/50 px-4 py-3 flex items-center justify-between sticky top-0 z-30 transition-colors duration-300 shadow-sm shrink-0">
                 <div class="flex items-center gap-3 flex-1 min-w-0">
-                    <div class="bg-emerald-800 dark:bg-emerald-600 text-white p-2 rounded-xl shadow-md shrink-0">
+                    <button @click="toggleSidebar" class="p-2 -ml-2 text-emerald-800 dark:text-emerald-300 active:scale-95 transition-transform" title="เปิดเมนู">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div class="bg-emerald-800 dark:bg-emerald-600 text-white p-2 rounded-xl shadow-md shrink-0 hidden sm:block">
                         <i class="fa-solid fa-mug-hot text-lg"></i>
                     </div>
                     <div class="min-w-0 flex-1">
@@ -1357,33 +1356,34 @@
 
             </div>
 
-        <!-- BOTTOM NAVIGATION BAR -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 bg-white/95 dark:bg-[#031d19]/95 backdrop-blur-xl border-t border-coffee-200 dark:border-emerald-900/50 bottom-nav shadow-[0_-4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.3)]">
-            <div class="grid grid-cols-5 gap-0 px-1 pt-1.5 pb-1">
-                <button v-for="item in navItemsRow1" :key="item.id"
-                        @click="navigate(item.id)"
-                        :class="activeTab === item.id ? 'text-emerald-700 dark:text-emerald-300' : 'text-stone-500 dark:text-emerald-500/50'"
-                        class="nav-item flex flex-col items-center justify-center gap-0.5 py-1.5 px-0.5 rounded-xl transition-all duration-200 relative">
-                    <div :class="activeTab === item.id ? 'bg-emerald-100 dark:bg-emerald-900/60 scale-110' : ''" class="p-1.5 rounded-xl transition-all duration-200">
-                        <i :class="'fa-solid ' + item.icon + ' text-base'"></i>
+        <!-- SIDEBAR MENU & OVERLAY -->
+        <div v-if="isSidebarOpen" @click="toggleSidebar" class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm z-40 transition-opacity"></div>
+        
+        <aside :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 w-64 max-w-[80vw] bg-white dark:bg-[#031d19] z-50 shadow-2xl transition-transform duration-300 ease-in-out border-r border-coffee-200 dark:border-emerald-900/50 flex flex-col">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-coffee-200 dark:border-emerald-900/50 flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/40">
+                <div class="flex items-center gap-3 text-emerald-800 dark:text-emerald-400 font-bold">
+                    <div class="bg-emerald-800 dark:bg-emerald-600 text-white p-1.5 rounded-lg shadow-sm">
+                        <i class="fa-solid fa-mug-hot text-sm"></i>
                     </div>
-                    <span :class="activeTab === item.id ? 'font-bold' : 'font-medium'" class="text-[9px] leading-tight text-center truncate w-full px-0.5">{{ item.label }}</span>
-                    <div v-if="activeTab === item.id" class="absolute -top-0 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-emerald-600 dark:bg-emerald-400 rounded-full"></div>
+                    <span>เมนูหลัก</span>
+                </div>
+                <button @click="toggleSidebar" class="p-2 text-stone-500 hover:text-stone-800 dark:text-emerald-500/50 dark:hover:text-emerald-300">
+                    <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <div class="grid grid-cols-4 gap-0 px-2 pb-1">
-                <button v-for="item in navItemsRow2" :key="item.id"
-                        @click="navigate(item.id)"
-                        :class="activeTab === item.id ? 'text-emerald-700 dark:text-emerald-300' : 'text-stone-500 dark:text-emerald-500/50'"
-                        class="nav-item flex flex-col items-center justify-center gap-0.5 py-1.5 px-0.5 rounded-xl transition-all duration-200 relative">
-                    <div :class="activeTab === item.id ? 'bg-emerald-100 dark:bg-emerald-900/60 scale-110' : ''" class="p-1.5 rounded-xl transition-all duration-200">
-                        <i :class="'fa-solid ' + item.icon + ' text-base'"></i>
-                    </div>
-                    <span :class="activeTab === item.id ? 'font-bold' : 'font-medium'" class="text-[9px] leading-tight text-center truncate w-full px-0.5">{{ item.label }}</span>
-                    <div v-if="activeTab === item.id" class="absolute -top-0 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-emerald-600 dark:bg-emerald-400 rounded-full"></div>
-                </button>
+            <!-- Sidebar Links -->
+            <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1.5 scrollbar-none">
+                <template v-for="item in allNavItems" :key="item.id">
+                    <button @click="navigate(item.id)" 
+                            :class="activeTab === item.id ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 font-bold border-emerald-300 dark:border-emerald-700/50' : 'text-stone-600 dark:text-emerald-500/80 hover:bg-coffee-50 dark:hover:bg-[#021612] font-medium border-transparent'" 
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left border">
+                        <i :class="'fa-solid ' + item.icon + ' w-6 text-center text-lg' + (activeTab === item.id ? ' text-emerald-600 dark:text-emerald-400' : '')"></i>
+                        <span class="text-sm">{{ item.label }}</span>
+                    </button>
+                </template>
             </div>
-        </nav>
+        </aside>
 
         <!-- POPUP 1: ADD STOCK MODAL -->
         <div v-if="addStockModal.show" class="fixed inset-0 bg-[#021612]/90 backdrop-blur-sm flex items-center justify-center z-[60] p-3 sm:p-4 transition-all">
@@ -1767,6 +1767,7 @@
         createApp({
             data() {
                 return {
+                    isSidebarOpen: false,
                     activeTab: 'dashboard',
                     theme: 'light',
                     currentTime: '',
@@ -1969,6 +1970,9 @@
                 equipmentPercent() {
                     if (this.totalExpenses === 0) return 0;
                     return Math.round((this.totalEquipmentSpent / this.totalExpenses) * 100);
+                },
+                allNavItems() {
+                    return [...this.navItemsRow1, ...this.navItemsRow2];
                 },
                 budgetDonutGradient() {
                     if (this.totalExpenses === 0) {
@@ -2184,8 +2188,12 @@
                 }
             },
             methods: {
+                toggleSidebar() {
+                    this.isSidebarOpen = !this.isSidebarOpen;
+                },
                 navigate(tab) {
                     this.activeTab = tab;
+                    this.isSidebarOpen = false;
                     this.updateCalculatedAverages();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 },

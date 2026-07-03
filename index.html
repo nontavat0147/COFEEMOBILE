@@ -96,31 +96,10 @@
         .page-enter {
             animation: slideUp 0.25s ease-out;
         }
-        /* Desktop blocker */
-        .desktop-blocker {
-            display: none;
-        }
-        @media (min-width: 768px) {
-            .desktop-blocker {
-                display: flex;
-            }
-            #app {
-                display: none !important;
-            }
-        }
     </style>
 </head>
 <body class="bg-coffee-50 text-[#1c0c02] dark:bg-emerald-955 dark:text-[#e1f0ec] min-h-screen transition-colors duration-300">
 
-    <!-- Desktop-only warning -->
-    <div class="desktop-blocker fixed inset-0 z-[9999] bg-gradient-to-br from-emerald-900 to-coffee-950 flex flex-col items-center justify-center p-8 text-center text-white">
-        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-10 max-w-md border border-white/20">
-            <i class="fa-solid fa-mobile-screen-button text-6xl mb-6 text-emerald-300"></i>
-            <h1 class="text-2xl font-bold mb-3">แอปนี้สำหรับมือถือเท่านั้น</h1>
-            <p class="text-emerald-100/80 text-sm leading-relaxed">Cafe R&D Mobile ออกแบบมาเพื่อใช้งานบนหน้าจอมือถือ กรุณาเปิดไฟล์ <strong>coffee-mobile.html</strong> บนสมาร์ทโฟนของคุณ</p>
-            <p class="text-xs text-emerald-200/60 mt-4">หรือลดขนาดหน้าต่างเบราว์เซอร์ให้แคบกว่า 768px</p>
-        </div>
-    </div>
 
     <div id="app" class="min-h-screen flex flex-col relative max-w-lg mx-auto shadow-2xl" v-cloak>
             

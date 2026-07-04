@@ -97,7 +97,7 @@
 </head>
 <body class="bg-coffee-50 text-[#1c0c02] dark:bg-emerald-955 dark:text-[#e1f0ec] min-h-screen transition-colors duration-300">
 
-    <div id="app" class="min-h-screen flex flex-col relative max-w-lg mx-auto shadow-2xl" v-cloak>
+    <div id="app" class="min-h-screen flex flex-col relative mx-auto shadow-2xl transition-all duration-300" :class="isDesktop ? 'max-w-6xl' : 'max-w-lg'" v-cloak>
             
             <!-- MOBILE HEADER -->
             <header class="bg-white/95 backdrop-blur-md dark:bg-[#111c19]/95 border-b border-coffee-200 dark:border-emerald-900/50 px-4 py-3 flex items-center justify-between sticky top-0 z-30 transition-colors duration-300 shadow-sm shrink-0">
@@ -1768,6 +1768,7 @@
             data() {
                 return {
                     isSidebarOpen: false,
+                    isDesktop: false,
                     activeTab: 'dashboard',
                     theme: 'light',
                     currentTime: '',
@@ -2190,6 +2191,11 @@
             methods: {
                 toggleSidebar() {
                     this.isSidebarOpen = !this.isSidebarOpen;
+                },
+                checkDeviceType() {
+                    // ถ้าหน้าจอกว้างกว่า 1024px ให้ถือว่าเปิดในคอมพิวเตอร์ -> ขยาย
+                    // ถ้าแคบกว่านั้น ให้ถือว่าเปิดในมือถือ -> ย่อกลับเหมือนเดิม
+                    this.isDesktop = window.innerWidth >= 1024;
                 },
                 navigate(tab) {
                     this.activeTab = tab;
@@ -2853,6 +2859,9 @@
                 }
             },
             mounted() {
+                this.checkDeviceType();
+                window.addEventListener('resize', this.checkDeviceType);
+
                 this.initializeTheme();
                 this.updateClock();
                 setInterval(() => {
@@ -2936,6 +2945,9 @@
                         this.showSuggestions = false;
                     }
                 });
+            },
+            beforeUnmount() {
+                window.removeEventListener('resize', this.checkDeviceType);
             }
         }).mount('#app');
     </script>
